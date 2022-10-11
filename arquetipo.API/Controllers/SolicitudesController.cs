@@ -29,18 +29,11 @@ namespace arquetipo.API.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(Solicitud solicitud)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            try
-            {
-                int result = await _solicitudService.Update(solicitud);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(400, ex.Message);
-            }
+            Solicitud respuesta =await _solicitudService.Get(id);
+            return Ok(respuesta);
         }
     }
 }

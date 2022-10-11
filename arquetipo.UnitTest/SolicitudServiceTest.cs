@@ -17,11 +17,13 @@ namespace arquetipo.UnitTest
         public SolicitudServiceTest()
         {
             Mock<IGenericRepository<Solicitud>> genericRepositorySolicitud = new GenericRepositorySolicitudMock()._genericRepositorySolicitud;
+            Mock<IGenericRepository<ClientePatioVehicular>> genericRepositoryPatioVehicular = new GenericRepositoryClientePatioVehicularMock()._genericRepositoryClientePatioVehicular;
             Mock<IEstadoSolicitudRepository> estadoSolicitudRepository = new EstadoSolicitudRepositoryMock()._estadoSolicitudRepository;
             Mock<ISolicitudRepository> solicitudRepository = new SolicitudRepositoryMock()._solicitudRepository;
-            _solicitudService = new SolicitudService(genericRepositorySolicitud.Object,
-                                                        estadoSolicitudRepository.Object,
-                                                        solicitudRepository.Object);
+            _solicitudService = new SolicitudService(genericRepositorySolicitud.Object
+                                                        ,estadoSolicitudRepository.Object
+                                                        ,solicitudRepository.Object
+                                                        ,genericRepositoryPatioVehicular.Object);
         }
 
         [Fact]
@@ -51,23 +53,5 @@ namespace arquetipo.UnitTest
 
             Assert.NotNull(respuesta);
         }
-
-        //[Fact]
-        //public async Task GenerarSolicitud_Nuevoliente()
-        //{
-        //    CrearSolicitudDto crearSolicitudDto = new CrearSolicitudDto()
-        //    {
-        //        IdCliente = 2,
-        //        IdPatioVehicular = 1,
-        //        IdEjecutivo = 1,
-        //        IdVehiculo = 1,
-        //        Cuotas = 12,
-        //        PlazoMeses = 12,
-        //        Observacion = "Ninguna",
-        //        Entrada = 200
-        //    };
-
-        //    var exception = await _solicitudService.Add(crearSolicitudDto);
-        //}
     }
 }

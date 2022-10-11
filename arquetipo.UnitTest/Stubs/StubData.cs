@@ -57,6 +57,13 @@ namespace arquetipo.UnitTest.Stubs
             FechaCreacion = DateTime.Today
         };
 
+        public static ClientePatioVehicular clientepPatioVehicular = new ClientePatioVehicular()
+        {
+            IdCliente = 1,
+            IdPatioVehicular = 1,
+            FechaCreacion = DateTime.Today
+        };
+
         public static Vehiculo vehiculo1 = new Vehiculo()
         {
             IdVehiculo = 1,

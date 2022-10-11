@@ -5,8 +5,6 @@ using arquetipo.Entity.Models;
 using arquetipo.UnitTest.MockRepository;
 using Moq;
 using System;
-using System.Net;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace arquetipo.UnitTest

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "arquetipo.Repository", "arq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "arquetipo.UnitTest", "arquetipo.UnitTest\arquetipo.UnitTest.csproj", "{F0C58E6A-49B1-483F-BCCE-A20E685F5D47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "arquetipo.IntegrationTest", "arquetipo.IntegrationTest\arquetipo.IntegrationTest.csproj", "{4B03CB32-2615-445F-AD57-8D021616439F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "arquetipo.IntegrationTest", "arquetipo.IntegrationTest\arquetipo.IntegrationTest.csproj", "{4B03CB32-2615-445F-AD57-8D021616439F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

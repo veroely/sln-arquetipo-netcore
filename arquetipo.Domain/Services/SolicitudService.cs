@@ -2,21 +2,25 @@
 using arquetipo.Domain.Interfaces;
 using arquetipo.Domain.IRepository;
 using arquetipo.Entity.Models;
+using System.Transactions;
 
 namespace arquetipo.Domain.Services
 {
     public class SolicitudService : ISolicitudService
     {
         private readonly IGenericRepository<Solicitud> _genericRepositorySolicitud;
+        private readonly IGenericRepository<ClientePatioVehicular> _genericRepositoryClietePatioVehicular;
         private readonly IEstadoSolicitudRepository _estadoSolicitud;
         private readonly ISolicitudRepository _solicitudRepository;
         public SolicitudService(IGenericRepository<Solicitud> genericRepositorySolicitud
                                 , IEstadoSolicitudRepository estadoSolicitud
-                                , ISolicitudRepository solicitudRepository)
+                                , ISolicitudRepository solicitudRepository
+                                , IGenericRepository<ClientePatioVehicular> genericRepositoryClietePatioVehicular)
         {
             _genericRepositorySolicitud = genericRepositorySolicitud;
             _estadoSolicitud = estadoSolicitud;
             _solicitudRepository = solicitudRepository;
+            _genericRepositoryClietePatioVehicular = genericRepositoryClietePatioVehicular;
         }
         public async Task<int> Add(CrearSolicitudDto solicitudDto)
         {
@@ -30,21 +34,44 @@ namespace arquetipo.Domain.Services
                 throw new Exception("El Cliente ya tiene una solicitud registrada.");
             }
 
-            //mappear los datos a la entidad
-            Solicitud solicitud = new Solicitud()
+            ClientePatioVehicular clientePatioVehicular = new ClientePatioVehicular()
             {
                 IdCliente = solicitudDto.IdCliente,
                 IdPatioVehicular = solicitudDto.IdPatioVehicular,
-                IdEjecutivo = solicitudDto.IdEjecutivo,
-                IdVehiculo = solicitudDto.IdVehiculo,
-                Cuotas = solicitudDto.Cuotas,
-                PlazoMeses = solicitudDto.PlazoMeses,
-                Entrada = solicitudDto.Entrada,
-                Observacion = solicitudDto.Observacion,
-                IdEstadoSolicitud = estadoRegistrada.IdEstadoSolicitud,
-                FechaCreacion = fechaHoy
+                FechaCreacion = DateTime.Today
             };
-            int respuesta = await _genericRepositorySolicitud.Add(solicitud);
+
+            int respuesta = 0;
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                // Do Operation 1
+                int resp = await _genericRepositoryClietePatioVehicular.Add(clientePatioVehicular);
+                if (resp > 0 )
+                {
+                    //mappear los datos a la entidad
+                    Solicitud solicitud = new Solicitud()
+                    {
+                        IdCliente = solicitudDto.IdCliente,
+                        IdPatioVehicular = solicitudDto.IdPatioVehicular,
+                        IdEjecutivo = solicitudDto.IdEjecutivo,
+                        IdVehiculo = solicitudDto.IdVehiculo,
+                        Cuotas = solicitudDto.Cuotas,
+                        PlazoMeses = solicitudDto.PlazoMeses,
+                        Entrada = solicitudDto.Entrada,
+                        Observacion = solicitudDto.Observacion,
+                        IdEstadoSolicitud = estadoRegistrada.IdEstadoSolicitud,
+                        FechaCreacion = fechaHoy
+                    };
+
+                    // Do Operation 2
+                    respuesta = await _genericRepositorySolicitud.Add(solicitud);
+                }
+
+                // if all the coperations complete successfully, this would be called and commit the trabsaction. 
+                // In case of an exception, it wont be called and transaction is rolled back
+                scope.Complete();
+            }
+
             return respuesta;
         }
 
